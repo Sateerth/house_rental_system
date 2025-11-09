@@ -8,14 +8,12 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rental.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# Change this secret key in production
+
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-please-change')
 
 db = SQLAlchemy(app)
 
-# -----------------
-# Models
-# -----------------
+
 class Owner(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(160), unique=True, nullable=False)
@@ -59,9 +57,7 @@ class Agreement(db.Model):
     end_date = db.Column(db.String(30))
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
 
-# -----------------
-# Helpers
-# -----------------
+
 def logged_in_owner():
     owner_id = session.get('owner_id')
     if not owner_id:
@@ -78,9 +74,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# -----------------
-# Routes - Public
-# -----------------
+
 @app.route('/')
 def index():
     houses = House.query.all()
@@ -94,12 +88,10 @@ def house_detail(house_id):
     bills = Bill.query.filter_by(house_id=house_id).order_by(Bill.date.desc()).all()
     return render_template('house_detail.html', house=h, agreement=agreement, tenant=tenant, bills=bills, owner=logged_in_owner())
 
-# -----------------
-# Routes - Auth
-# -----------------
+
 @app.route('/register', methods=['GET','POST'])
 def register():
-    # Allow registration only if no owner exists (simple safety)
+   
     existing = Owner.query.first()
     if existing:
         flash("Registration disabled: owner already created. Use login.", "info")
@@ -139,9 +131,7 @@ def logout():
     flash("Logged out.", "info")
     return redirect(url_for('index'))
 
-# -----------------
-# Routes - Owner (Protected)
-# -----------------
+
 @app.route('/owner')
 @login_required
 def owner_dashboard():
@@ -222,12 +212,10 @@ def add_agreement(house_id):
         return redirect(url_for('house_detail', house_id=house_id))
     return render_template('add_agreement.html', house_id=house_id)
 
-# -----------------
-# App start
-# -----------------
+
 if __name__ == "__main__":
-    # create DB
+    
     with app.app_context():
         db.create_all()
-    # run dev server
+    
     app.run(debug=True)
