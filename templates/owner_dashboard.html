@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Owner Dashboard</h2>
+  <div>
+    <a class="btn btn-primary" href="{{ url_for('add_house') }}">Add House</a>
+  </div>
+</div>
+
+{% for s in summaries %}
+  <div class="card mb-2 p-3">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h5>{{ s.house.name }}</h5>
+        <div class="text-muted">{{ s.house.address }}</div>
+        <div>Rent: ₹{{ '{:.2f}'.format(s.house.rent) }}</div>
+        <div>Tenant: {{ s.tenant.name if s.tenant else '—' }}</div>
+        <div>Agreement: {{ s.agreement.start_date if s.agreement else '—' }} to {{ s.agreement.end_date if s.agreement else '—' }}</div>
+      </div>
+      <div class="text-end">
+        <div>Total bills: ₹{{ '{:.2f}'.format(s.total) }}</div>
+        <div>Water: ₹{{ '{:.2f}'.format(s.water) }} | Electricity: ₹{{ '{:.2f}'.format(s.electric) }}</div>
+        <a class="btn btn-outline-secondary btn-sm mt-2" href="{{ url_for('owner_house_detail', house_id=s.house.id) }}">View</a>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <p>No houses yet.</p>
+{% endfor %}
+{% endblock %}

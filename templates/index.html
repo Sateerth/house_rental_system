@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>All Houses</h2>
+  {% if owner %}
+    <a class="btn btn-success" href="{{ url_for('add_house') }}">Add House</a>
+  {% endif %}
+</div>
+
+<div class="row">
+  {% for h in houses %}
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ h.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ h.address }}</h6>
+          <p class="mb-1"><strong>Rent:</strong> ₹{{ '{:.2f}'.format(h.rent) }}</p>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('house_detail', house_id=h.id) }}">Details</a>
+          {% if owner %}
+            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('owner_house_detail', house_id=h.id) }}">Manage</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="col-12">
+      <p>No houses yet.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

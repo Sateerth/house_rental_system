@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Add Agreement for House {{ house_id }}</h3>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Start date</label>
+    <input class="form-control" name="start_date" type="date">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">End date</label>
+    <input class="form-control" name="end_date" type="date">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Content</label>
+    <textarea class="form-control" name="content" rows="6"></textarea>
+  </div>
+  <button class="btn btn-primary">Save</button>
+</form>
+{% endblock %}
